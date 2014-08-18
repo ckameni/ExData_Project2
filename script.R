@@ -44,7 +44,22 @@ names(NEI)
  ##P2_q1
 # first alternativ- my prefered
 zy<-tapply(NEI$Emissions, NEI$year, sum)# right answer!
+zy
 barplot(zy, main="Emmisssions Distribution", 
         xlab="Number of years")
 
+
+zm<-tapply(NEI$Emissions, NEI$year, mean)# right answer!
+barplot(zm, main="Emmisssions Distribution", 
+        xlab="Number of years")
+
 #### P2_q2 
+#Have total emissions from PM2.5 decreased in the Baltimore City,
+#Maryland (fips == "24510") from 1999 to 2008?
+
+baltimore <- subset(NEI,fips == "24510")
+
+zb<-tapply(baltimore$Emissions, baltimore$year, sum)# right answer!
+zb
+barplot(zb, main="Emmisssions", xlab=" years")
+
