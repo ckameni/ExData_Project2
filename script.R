@@ -63,3 +63,10 @@ zb<-tapply(baltimore$Emissions, baltimore$year, sum)# right answer!
 zb
 barplot(zb, main="Emmisssions", xlab=" years")
 
+#####p2_q3
+library(ggplot2)
+# one of the options
+
+xy <- aggregate(Emissions~year + type ,NEI, sum) # my favourite way to do it
+xy
+qplot(year,Emissions,data =xy, facets= .~type,geom="smooth",method = "lm")
