@@ -14,12 +14,14 @@ SCC <- readRDS("Source_Classification_Code.rds")
 str(NEI)
 head(NEI);
 tail(NEI)
-head(SCC);
+head(SCC,2);
 tail(SCC)
 names(SCC)
 names(NEI)
-
-
+dim(SCC)
+dim(NEI)
+length(unique(NEI$SCC))
+length(unique(SCC$SCC))
 
 #I'm playing around with aggregate(emissions, list(year), sum) 
 #and using barplot() to plot the results.  
@@ -69,4 +71,49 @@ library(ggplot2)
 
 xy <- aggregate(Emissions~year + type ,NEI, sum) # my favourite way to do it
 xy
-qplot(year,Emissions,data =xy, facets= .~type,geom="smooth",method = "lm")
+qplot(year,Emissions,data =xy, facets= .~type,geom=c("point","smooth"),method = "lm")
+
+
+g<-ggplot(xy,aes(year,Emissions))
+g + geom_point() +
+  geom_smooth(method="lm") + facet_grid(.~type)
+
+######P2_q4
+#Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+
+# column "Short.Namer" has coal 
+coal<-SCC[grep(".*[cC]oal.*",SCC$Short.Name),]
+
+# column "EI.Sector" has coal too
+coal2 <-SCC[grep(".*[cC]oal.*",SCC$EI.Sector),] 
+
+#merge the data
+mergedData <- merge(coal3,NEI,by.x = "SCC", by.y = "SCC")
+
+dim(coal)
+dim(coal2)
+
+par(mar = rep(2, 4))
+mD<-tapply(mergedData $Emissions, mergedData $year, sum)# right answer!
+mD
+barplot(mD, main="Emmisssions Distribution", 
+        xlab="Number of years")
+
+
+############################## little Explanation#############
+#find the rows where "coal" appears! 
+s<-grep(".*[cC]oal.*",SCC$Short.Name) # in column "Short.names"
+c<-grep(".*[cC]oal.*",SCC$EI.Sector) # in column "Ei.Sector"
+# which elements ofc are not in s?
+
+z<-setdiff(c,s)
+
+#
+as<- z + s # unique(s,c)
+
+#what means coal related? what is coal?
+#####################################################################
+
+
+
+myMeltData<-melt(myDataFrame, id.var="Year")
