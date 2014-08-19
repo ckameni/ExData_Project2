@@ -10,6 +10,8 @@ dir()
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
 
+rm(list=ls())
+
 
 str(NEI)
 head(NEI);
@@ -88,7 +90,7 @@ coal<-SCC[grep(".*[cC]oal.*",SCC$Short.Name),]
 coal2 <-SCC[grep(".*[cC]oal.*",SCC$EI.Sector),] 
 
 #merge the data
-mergedData <- merge(coal3,NEI,by.x = "SCC", by.y = "SCC")
+mergedData <- merge(coal,NEI,by.x = "SCC", by.y = "SCC")
 
 dim(coal)
 dim(coal2)
@@ -117,3 +119,19 @@ as<- z + s # unique(s,c)
 
 
 myMeltData<-melt(myDataFrame, id.var="Year")
+#####################################################################
+
+####p2_q5
+
+
+dim(coal)
+mergedData <- merge(coal,NEI,by.x = "SCC", by.y = "SCC")
+Baltimore <- subset(mergedData,fips == "24510")
+
+
+
+par(mar = rep(2, 4))
+mB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
+mB
+barplot(mB, main="Emmisssions Distribution", 
+        xlab="Number of years")
