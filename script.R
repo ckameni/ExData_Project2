@@ -13,27 +13,7 @@ SCC <- readRDS("Source_Classification_Code.rds")
 rm(list=ls())
 
 
-#I'm playing around with aggregate(emissions, list(year), sum) 
-#and using barplot() to plot the results.  
-#'
-#So, tapply, aggregate could help..
-
-#tapply(emissions, year, sum) # you may have to edit the argument as I have just put for example. So, this should return you with the sum of emissions group by year.
-
-#aggregate(emissions, year, sum)
-#aggregate(emissions, by=list(year, type), sum) # here you can also give a list of variables you may wish to group by… say emissions group by year and type…#
-
-#Another one could be...#
-#ddply(emissions, ~year, function) # this will need the plyr package to be installed.'
-
-#In conjunction, you can use facet layer in the ggplot for plotting…. I like to use facet..
-
-#Hope this helps..
-
-
-
-
- ##P2_q1
+##P2_q1
 # first alternativ- my prefered
 zy<-tapply(NEI$Emissions, NEI$year, sum)# right answer!
 zy
@@ -59,7 +39,8 @@ barplot(zb, main="Emmisssions", xlab=" years")
 library(ggplot2)
 # one of the options
 
-xy <- aggregate(Emissions~year + type ,NEI, sum) # my favourite way to do it
+# look for the mean not the sum like q1 & q2
+xy <- aggregate(Emissions~year + type ,NEI, meam) # my favourite way to do it
 xy
 qplot(year,Emissions,data =xy, facets= .~type,geom=c("point","smooth"),method = "lm")
 
@@ -72,46 +53,42 @@ g + geom_point() +
 #Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
 
 # column "Short.Namer" has coal 
-coal<-SCC[grep(".*[cC]oal.*",SCC$Short.Name),]
+     # coal_Short 
+      coal_Short<-grep(".*[cC]oal.*",SCC$Short.Name)
 
 # column "EI.Sector" has coal too
-coal2 <-SCC[grep(".*[cC]oal.*",SCC$EI.Sector),] 
+      #coal_EI
+      coal_EI<-grep(".*[cC]oal.*",SCC$EI.Sector)
 
+# coal_Short & coal_Short have different lengths
+ #find the differents rows betrween boths variables
+      diff<-setdiff(coal_EI,coal_Short) 
 
+# Coal_short contains the coal_Ei vrctor except the "diff" vector that we calculated
+      #combine coal_Short and diff
+    coal_df<-SCC[coal_Short,]
+    diff_df<-SCC[diff,]
 
-diff<-setdiff(coal2,coal)
+      # merging
+    coal_df<- rbind(coal_df,diff_df) #here're all the coal related tada
 
-dim(diff)
-#merge the data
-mergedData <- merge(coal,NEI,by.x = "SCC", by.y = "SCC")
+      #merge the data
+    coalData <- merge(coal_df,diff_df,all= TRUE)
 
-dim(coal)
-dim(coal2)
+  
+#merge NEI and CoalData from SCC
+     Data <-  merge(coalData ,NEI,by.x = "SCC", by.y = "SCC")
 
+# Prepare the data for plotting by grouping them
+group<-tapply(Data $Emissions, Data $year, sum)# right answer!
+
+# Plotting
 par(mar = rep(2, 4))
-mD<-tapply(mergedData $Emissions, mergedData $year, sum)# right answer!
-mD
-barplot(mD, main="Emmisssions Distribution", 
+barplot(group, main="Emmisssions Distribution", 
+        
         xlab="Number of years")
 
 
-############################## little Explanation#############
-#find the rows where "coal" appears! 
-s<-grep(".*[cC]oal.*",SCC$Short.Name) # in column "Short.names"
-c<-grep(".*[cC]oal.*",SCC$EI.Sector) # in column "Ei.Sector"
-# which elements ofc are not in s?
-c
-s
-z<-setdiff(c,s)
-dim(z)
-z
-#
-as<- z + s # unique(s,c)
-
-#what means coal related? what is coal?
-#####################################################################
-
-head(SCC)
 
 myMeltData<-melt(myDataFrame, id.var="Year")
 #####################################################################
@@ -162,4 +139,5 @@ par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
             xlab="Number of years")
     barplot(mLA, main="Los Angeles", 
             xlab="Number of years")
+
 
