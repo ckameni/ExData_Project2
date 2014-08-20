@@ -13,18 +13,6 @@ SCC <- readRDS("Source_Classification_Code.rds")
 rm(list=ls())
 
 
-str(NEI)
-head(NEI);
-tail(NEI)
-head(SCC,2);
-tail(SCC)
-names(SCC)
-names(NEI)
-dim(SCC)
-dim(NEI)
-length(unique(NEI$SCC))
-length(unique(SCC$SCC))
-
 #I'm playing around with aggregate(emissions, list(year), sum) 
 #and using barplot() to plot the results.  
 #'
@@ -89,6 +77,11 @@ coal<-SCC[grep(".*[cC]oal.*",SCC$Short.Name),]
 # column "EI.Sector" has coal too
 coal2 <-SCC[grep(".*[cC]oal.*",SCC$EI.Sector),] 
 
+
+
+diff<-setdiff(coal2,coal)
+
+dim(diff)
 #merge the data
 mergedData <- merge(coal,NEI,by.x = "SCC", by.y = "SCC")
 
@@ -107,31 +100,66 @@ barplot(mD, main="Emmisssions Distribution",
 s<-grep(".*[cC]oal.*",SCC$Short.Name) # in column "Short.names"
 c<-grep(".*[cC]oal.*",SCC$EI.Sector) # in column "Ei.Sector"
 # which elements ofc are not in s?
-
+c
+s
 z<-setdiff(c,s)
-
+dim(z)
+z
 #
 as<- z + s # unique(s,c)
 
 #what means coal related? what is coal?
 #####################################################################
 
-
+head(SCC)
 
 myMeltData<-melt(myDataFrame, id.var="Year")
 #####################################################################
 
 ####p2_q5
+# go to epa website 4.1 P.89 and 4.6 P.113 to find the definition of motor vehicle sources
+#http://www.epa.gov/ttn/chief/net/2008neiv3/2008_neiv3_tsd_draft.pdf
+  #view the source list
+kl<-unique(as.vector(SCC[,4]))
 
+#  search fo the relevant informations in the SCC data frame
 
-dim(coal)
-mergedData <- merge(coal,NEI,by.x = "SCC", by.y = "SCC")
+ motor <-SCC[grep("[Ll]ocomotives|[Mm]arine |[Aa]ircraft|[Gg]asoline [Ll]ight|[Dd]iesel [Ll]ight|[Gg]asoline [Hh]eavy|[Dd]iesel [Hh]eavy",
+               SCC$EI.Sector),];dim(bd_l);dim(motor)
+  
+#merge the motor and the NEI data frames
+
+mergedData <- merge(motor,NEI,by.x = "SCC", by.y = "SCC")
+dim(mergedData)
 Baltimore <- subset(mergedData,fips == "24510")
 
-
-
-par(mar = rep(2, 4))
+ # group data
 mB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
 mB
+
+# plotting
+par(mar = rep(2, 4))
 barplot(mB, main="Emmisssions Distribution", 
         xlab="Number of years")
+
+
+######P2_Q6
+# Batimore data
+Baltimore <- subset(mergedData,fips == "24510")
+mB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
+mB
+
+#Losangeles data
+LosAngeles <- subset(mergedData,fips == "06037")
+mLA<-tapply(LosAngeles$Emissions,LosAngeles$year, sum)# right answer!
+mLA
+
+#plotting
+
+par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
+
+    barplot(mB, main="Baltimore", 
+            xlab="Number of years")
+    barplot(mLA, main="Los Angeles", 
+            xlab="Number of years")
+
