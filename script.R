@@ -15,14 +15,18 @@ rm(list=ls())
 
 ##P2_q1
 # first alternativ- my prefered
-zy<-tapply(NEI$Emissions, NEI$year, sum)# right answer!
-zy
-barplot(zy, main="Emmisssions Distribution", 
+# preparing for plottingt´: grgoup the data
+Group<-tapply(NEI$Emissions, NEI$year, sum)# right answer!
+
+    #plotting
+barplot(Group, main="Emmisssions Distribution", 
         xlab="Number of years")
 
-
-zm<-tapply(NEI$Emissions, NEI$year, mean)# right answer!
-barplot(zm, main="Emmisssions Distribution", 
+  # preparing for plottingt´: grgoup the data
+Group<-tapply(NEI$Emissions, NEI$year, mean)# right answer!
+    
+#Plotting
+  barplot(Group, main="Emmisssions Distribution", 
         xlab="Number of years")
 
 #### P2_q2 
@@ -31,20 +35,23 @@ barplot(zm, main="Emmisssions Distribution",
 
 baltimore <- subset(NEI,fips == "24510")
 
-zb<-tapply(baltimore$Emissions, baltimore$year, sum)# right answer!
-zb
-barplot(zb, main="Emmisssions", xlab=" years")
+# preparing for plotting group the data
+Group<-tapply(baltimore$Emissions, baltimore$year, sum)# right answer!
+
+barplot(Group, main="Emmisssions", xlab=" years")
 
 #####p2_q3
 library(ggplot2)
 # one of the options
 
-# look for the mean not the sum like q1 & q2
-xy <- aggregate(Emissions~year + type ,NEI, meam) # my favourite way to do it
-xy
-qplot(year,Emissions,data =xy, facets= .~type,geom=c("point","smooth"),method = "lm")
+# preparing for plottingt´: group the data
+  # look for the mean not the sum like q1 & q2
+group <- aggregate(Emissions~year + type ,NEI, meam) # my favourite way to do it
 
+  # Ploting 1
+qplot(year,Emissions,data =group, facets= .~type,geom=c("point","smooth"),method = "lm")
 
+  #Plotting 2
 g<-ggplot(xy,aes(year,Emissions))
 g + geom_point() +
   geom_smooth(method="lm") + facet_grid(.~type)
@@ -110,34 +117,36 @@ mergedData <- merge(motor,NEI,by.x = "SCC", by.y = "SCC")
 dim(mergedData)
 Baltimore <- subset(mergedData,fips == "24510")
 
- # group data
-mB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
-mB
+ # Prepare for Plotting group data
+Group<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
+
 
 # plotting
 par(mar = rep(2, 4))
-barplot(mB, main="Emmisssions Distribution", 
+barplot(Group, main="Emmisssions Distribution", 
         xlab="Number of years")
 
 
 ######P2_Q6
 # Batimore data
 Baltimore <- subset(mergedData,fips == "24510")
-mB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
-mB
+ #Group the data
+GroupB<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
+
 
 #Losangeles data
 LosAngeles <- subset(mergedData,fips == "06037")
-mLA<-tapply(LosAngeles$Emissions,LosAngeles$year, sum)# right answer!
-mLA
+  #Group the data
+GroupLA<-tapply(LosAngeles$Emissions,LosAngeles$year, sum)# right answer!
+
 
 #plotting
 
 par(mfrow = c(1, 2), mar = c(4, 4, 2, 1))
 
-    barplot(mB, main="Baltimore", 
+    barplot(GroupB, main="Baltimore", 
             xlab="Number of years")
-    barplot(mLA, main="Los Angeles", 
+    barplot(mGroupLA, main="Los Angeles", 
             xlab="Number of years")
 
 
