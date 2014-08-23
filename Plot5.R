@@ -17,39 +17,18 @@
     SCC <- readRDS("Source_Classification_Code.rds")
 
   # subseting the Table
-head(NEI)
 
   # search for the relevant informations in the SCC data frame
-onRoad<-subset(NEI,type =="ON-ROAD")
-dim(onRoad)                                # 3183599  rows
-head(onRoad,20)
+  onRoad<-subset(NEI,type =="ON-ROAD")
 
-    motor <-SCC[grep(".*[Gg]asoline [Ll]ight.*|.*[Dd]iesel [Ll]ight.*|
-                     .*[Gg]asoline [Hh]eavy.*|.*[Dd]iesel [Hh]eavy.*",
-                     SCC$EI.Sector),]
- dim(motor)
-# testing
-m1<-SCC[grep(".*[Gg]asoline [Ll]ight.*",SCC$EI.Sector),];dim(m1)
-m2<-SCC[grep(".*[Dd]iesel [Ll]ight.*",SCC$EI.Sector),];dim(m2)
-m3<-SCC[grep(".*[Gg]asoline [Hh]eavy.*",SCC$EI.Sector),];dim(m3)
-m4<-SCC[grep(".*[Dd]iesel [Hh]eavy.*",SCC$EI.Sector),];dim(m4)
 
-b<-merge(m1,m2,all=TRUE)
-c<-merge(m3,m4,all=TRUE)
-a<-merge(c,b,all=TRUE)
-head(a)
-merg <- merge(a,NEI,by.x = "SCC", by.y = "SCC")
+  # subset the onRoad data frame to relevant data for Baltimore   
+    Baltimore <- subset(onRoad,fips == "24510")
+     dim(Baltimore)
 
-#merge the motor and the NEI data frames
-    
-    mergedData <- merge(motor,NEI,by.x = "SCC", by.y = "SCC")
-    dim(mergedData)  #2911807 Rows
-    Baltimore <- subset(mergedData,fips == "24510")
+  # group the Emissions by years 
+    mySubset<-tapply(Baltimore$Emissions,Baltimore$year, sum)
 
-  #Prepare for Plotting group data
-    Group<-tapply(Baltimore$Emissions,Baltimore$year, sum)# right answer!
-ls()
-rm(b,c)
 
 ##################################################################################
 ##############################             #######################################
@@ -64,9 +43,8 @@ png("Plot5.png",height = 500,width = 600, units="px")
 
 
 #plotting
-par(mar = rep(2, 4))
-barplot(Group, main="Emmisssions Distribution", 
-        xlab="Number of years")
+barplot(mySubset, main="Plot5", 
+        xlab="years",ylab="Emissions")
 
 
 #close the connection
