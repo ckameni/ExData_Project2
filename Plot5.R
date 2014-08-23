@@ -1,3 +1,4 @@
+#Plot5.R
 ################################################################################
 #########################                        ###############################
 #########################    resizing the data   ###############################
@@ -26,7 +27,7 @@
     Baltimore <- subset(onRoad,fips == "24510")
 
 
-  # group the Emissions by years 
+  # group the sum of Emissions by years 
     mySubset<-tapply(Baltimore$Emissions,Baltimore$year, sum)
 
 
@@ -37,15 +38,16 @@
 ##################################################################################
 
 
-
-# open png function to safe the file as  png 
-png("Plot5.png",height = 500,width = 600, units="px")
-
-
-#plotting
-barplot(mySubset, main="Plot5", 
-        xlab="years",ylab="Emissions")
-
-
-#close the connection
-dev.off()
+    
+  # open png function to safe the file as  png 
+    png("Plot5.png",height = 500,width = 600, units="px")
+    
+    
+  #plotting
+    barplot(mySubset, main="Plot5", 
+            xlab="years",ylab="Emissions")
+  # adding regression line
+    abline(coef(line(mySubset)))
+    
+  #close the connection
+    dev.off()

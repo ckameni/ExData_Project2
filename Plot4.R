@@ -30,7 +30,8 @@
     
     
     
-  # Prepare the data for plotting by grouping them
+  # Prepare the data for plotting by grouping 
+      #the sum of emissions by years
     mySubset <- tapply(Data $Emissions, Data $year, sum)
 
 
@@ -49,6 +50,9 @@
   # Plotting
     barplot(mySubset, main = "Plot4",xlab="years", ylab="Sum of Emissions")
     
+  # adding regression line
+    abline(coef(line(mySubset)))
+
 
   # close the connection
     dev.off()

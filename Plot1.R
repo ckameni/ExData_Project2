@@ -38,6 +38,9 @@
   # plot mySum
     barplot(mySum, main="Plot1", xlab="years", ylab="Sum of Emissions")  
     
+  # adding regression line
+    abline(coef(line(mySum)))
+
   #close the connection
     dev.off()
 

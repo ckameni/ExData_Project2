@@ -39,6 +39,9 @@ Plot2.R
 
   # plotting
     barplot(mySubset, main= "Plot2", xlab="years", ylab="Sum of Emissions")
+    
+  # adding regression line
+    abline(coef(line(mySubset)))
 
   #close the connection
     dev.off()
