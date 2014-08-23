@@ -46,16 +46,38 @@ library(ggplot2)
 
 # preparing for plottingt´: group the data
   # look for the mean not the sum like q1 & q2
-group <- aggregate(Emissions~year + type ,NEI, meam) # my favourite way to do it
+group <- aggregate(Emissions~year + type ,NEI, mean) # my favourite way to do it
+group  
+group1<- aggregate(Emissions~year + type ,NEI, sum) # my favourite way to do it
 
-  # Ploting 1
-qplot(year,Emissions,data =group, facets= .~type,geom=c("point","smooth"),method = "lm")
+
+library(plyr) 
+ddply(NEI, .(Emissions,year), mean)
+rm(Group)
+
+ls()
+
+# Ploting 1
+p<-qplot(Emissions,data =AggData, facets= .~type,geom="histogram", binwidth=30)
+p+scale_x_discrete(breaks=1:4,labels=c("1999","2002","2005","2008"))
+
+g + scale_x_discrete(breaks=0:3,labels=c("1999","2002","2005","2008"))+
+  
+
 
   #Plotting 2
-g<-ggplot(xy,aes(year,Emissions))
+g<-ggplot(group,aes(year,Emissions))
 g + geom_point() +
   geom_smooth(method="lm") + facet_grid(.~type)
++
 
+# 2 variation to set the x axis
+
+scale_x_discrete(breaks=0:3,labels=c("1999","2002","2005","2008"))
+
+scale_x_continuous(breaks=0:3,labels=c("1999","2002","2005","2008"))
+                   
+                   
 ######P2_q4
 #Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
 
