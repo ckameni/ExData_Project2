@@ -17,14 +17,14 @@
     SCC <- readRDS("Source_Classification_Code.rds")
 
   # subseting the Table
-
   # search for the relevant informations in the SCC data frame
   onRoad<-subset(NEI,type =="ON-ROAD")
 
 
-  # subset the onRoad data frame to relevant data for Baltimore   
+  # subset the onRoad data frame to find
+    #relevant data for Baltimore   
     Baltimore <- subset(onRoad,fips == "24510")
-     dim(Baltimore)
+
 
   # group the Emissions by years 
     mySubset<-tapply(Baltimore$Emissions,Baltimore$year, sum)
