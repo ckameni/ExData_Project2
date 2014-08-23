@@ -26,20 +26,19 @@
     #for both cities Baltimore and Los Angeles  
     cities<- subset(onRoad,fips == "24510" | fips == "06037")
 
-  # group the Emissions by years and by fips(cities)
-    mySubset<- aggregate(Emissions~year + fips ,cities, sum)
-
+  
   # insert the names of the concerned cities in the data frame
-    for (i in 1:8){
+    for (i in 1:nrow(cities)){
       
-      if(mySubset[i,"fips"]=="06037"){
-        mySubset[i,"fips"]<-"Los Angeles"
+      if(cities[i,"fips"]=="06037"){
+        cities[i,"fips"]<-"Los Angeles"
       }
   
-      if(mySubset[i,"fips"]=="24510"){
-        mySubset[i,"fips"]<-"Baltimore"
+      if(cities[i,"fips"]=="24510"){
+        cities[i,"fips"]<-"Baltimore"
       }
     }
+
 
 ##################################################################################
 ##############################             #######################################
@@ -51,18 +50,19 @@
 library(ggplot2)
 
   #open png function to safe the file as  png 
-    png("Plot6.png",height= 700,width=850, units="px")
+    png("Plot6.png",height= 600,width=700, units="px")
 
 
   #Plotting 
-    g<-ggplot(mySubset,aes(year,Emissions))
-    g+
-    geom_point() +
-    geom_smooth(method="lm") + 
-    facet_grid(.~fips)
+    qplot(year,
+          Emissions,
+          data=cities,
+          color=fips,
+          geom=("smooth"),
+          method="lm")
+
 
   #close the connection
     dev.off()
-
 
 
