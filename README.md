@@ -1,4 +1,4 @@
-# ExData_Project2 
+### ExData_Project2 
 ===============
 plot.new() set up plot region
 plot.window() set up coordinate system (xlim, ylim)
